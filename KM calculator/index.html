@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K&M Beauty Salón - Cotizador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --morado-royal: #6A1B9A;
+            --morado-luz: #F3E5F5;
+            --morado-deep: #4A148C;
+            --blanco: #FFFFFF;
+            --gris-ultra: #F8F9FA;
+            --texto: #2D3436;
+            --shadow: 0 20px 40px rgba(106, 27, 154, 0.08);
+            /* Contornos ultra suavizados globales */
+            --radios-grandes: 32px;
+            --radios-medianos: 18px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--gris-ultra);
+            color: var(--texto);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- CONTENEDOR DE LA PÁGINA (Bordes muy suavizados) --- */
+        .main-card {
+            background: var(--blanco);
+            width: 100%;
+            max-width: 500px;
+            height: 760px;
+            border-radius: var(--radios-grandes);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .main-card:hover { 
+            transform: scale(1.01); 
+        }
+
+        /* --- HEADER --- */
+        .header {
+            padding: 35px 20px 10px;
+            text-align: center;
+            background: var(--blanco);
+            z-index: 10;
+        }
+
+        /* Contenedor circular suave para asegurar la carga del logo por defecto */
+        .logo-container {
+            width: 100%;
+            max-width: 220px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: var(--radios-medianos);
+            transition: transform 0.3s ease;
+        }
+        .logo:hover { transform: rotate(-1.5deg) scale(1.03); }
+
+        /* --- PROGRESO --- */
+        .progress-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--morado-luz);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .dot.active {
+            width: 25px;
+            background: var(--morado-royal);
+            border-radius: 10px;
+        }
+
+        /* --- CONTENEDOR DE PASOS (SWIPE WRAPPER) --- */
+        .steps-container {
+            display: flex;
+            flex: 1;
+            width: 400%;
+            transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .step-page {
+            width: 25%;
+            padding: 0 32px 35px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            font-size: 19px;
+            color: var(--morado-deep);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* --- ELEMENTOS DE FORMULARIO (Contornos Redondeados) --- */
+        .option-group { margin-bottom: 22px; }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #57606F;
+            font-weight: 400;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #E4E7EB;
+            border-radius: var(--radios-medianos);
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            outline: none;
+            background: #fff;
+        }
+
+        select:focus, input:focus, select:hover, input:hover {
+            border-color: var(--morado-royal);
+            background: var(--morado-luz);
+            transform: translateY(-2px);
+        }
+
+        /* --- BOTONES --- */
+        .btn-nav {
+            background: var(--morado-royal);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: var(--radios-medianos);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: auto;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-nav:hover {
+            background: var(--morado-deep);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 12px 24px rgba(106, 27, 154, 0.2);
+        }
+
+        .btn-nav:disabled {
+            background: #CED6E0;
+            color: #A4B0BE;
+            transform: none !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+        }
+
+        .btn-back {
+            background: none;
+            color: var(--morado-royal);
+            border: none;
+            margin-bottom: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: left;
+            width: fit-content;
+            transition: transform 0.2s ease;
+        }
+        .btn-back:hover {
+            transform: translateX(-3px);
+        }
+
+        /* --- RESUMEN FINAL --- */
+        .receipt {
+            background: var(--morado-luz);
+            border-radius: var(--radios-medianos);
+            padding: 22px;
+            margin-bottom: 20px;
+            border: 1px dashed rgba(106, 27, 154, 0.3);
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #2C3E50;
+        }
+
+        .total-box {
+            text-align: center;
+            padding: 22px;
+            background: var(--morado-royal);
+            color: white;
+            border-radius: var(--radios-medianos);
+            margin-top: 10px;
+            transition: transform 0.3s ease;
+        }
+        .total-box:hover {
+            transform: scale(1.02);
+        }
+
+        .total-box h3 { font-size: 34px; margin-top: 5px; font-weight: 700; }
+
+        /* Estilo para filas de diseño */
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .flex-row label { margin-bottom: 0; flex: 1; }
+        .flex-row input { width: 75px; text-align: center; padding: 10px; }
+        .flex-row input[type="checkbox"] { 
+            width: 22px; 
+            height: 22px; 
+            accent-color: var(--morado-royal);
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header">
+        <div class="logo-container">
+            <img src="https://images2.imgbox.com/fa/cb/vXzE2V6y_o.jpg" alt="Logo K&M Salon" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/400x150/F3E5F5/6A1B9A?text=K%26M+Beauty+Salon';">
+        </div>
+        <div class="progress-bar">
+            <div class="dot active" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+        </div>
+    </div>
+
+    <div class="steps-container" id="stepsWrapper">
+        
+        <div class="step-page">
+            <h2>Técnica Base</h2>
+            <div class="option-group">
+                <label>Selecciona el servicio principal:</label>
+                <select id="tecnica" onchange="validarPaso1()">
+                    <option value="">-- Elige una técnica --</option>
+                    <optgroup label="Polygel">
+                        <option value="300">Polygel Largo 1 ($300)</option>
+                        <option value="350">Polygel Largo 2 ($350)</option>
+                        <option value="380">Polygel Largo 3 ($380)</option>
+                        <option value="400">Polygel Largo 4 ($400)</option>
+                        <option value="450">Polygel Largo 5 ($450)</option>
+                    </optgroup>
+                    <option value="150">Gel Semipermanente Manos ($150)</option>
+                    <option value="300">Rubber Gel ($300)</option>
+                    <option value="190">Press On ($190)</option>
+                </select>
+            </div>
+            <p style="font-size: 11px; color: #95A5A6; text-align: center; margin-bottom: 20px;">Incluye 2 tonos lisos a elegir.</p>
+            
+            <button class="btn-nav" onclick="confirmarPaso1()" id="btnNext1" disabled style="background: #CED6E0;">
+                Confirmar Técnica Base
+            </button>
+        </div>
+
+        <div class="step-page">
+            <button class="btn-back" onclick="nextStep(0)">← Volver</button>
+            <h2>Decoraciones Extra</h2>
+            <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px;">
+                <div class="flex-row">
+                    <label>Arte Simple / Francés / Ojo Gato ($5)</label>
+                    <input type="number" class="calc-input" data-price="5" id="dec_simple" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>3D / Encapsulado / Naturaleza ($10)</label>
+                    <input type="number" class="calc-input" data-price="10" id="dec_med" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>Relieve / Baby Boomer / Flor 3D ($15)</label>
+                    <input type="number" class="calc-input" data-price="15" id="dec_high" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>Cristales CH ($20)</label>
+                    <input type="number" class="calc-input" data-price="20" id="crist_ch" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>Cristales M ($30)</label>
+                    <input type="number" class="calc-input" data-price="30" id="crist_m" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>Uña Completa Cristales CH ($50)</label>
+                    <input type="number" class="calc-input" data-price="50" id="full_crist" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>Piedra pequeña ($2)</label>
+                    <input type="number" class="calc-input" data-price="2" id="piedra" min="0" value="0">
+                </div>
+            </div>
+            <button class="btn-nav" onclick="nextStep(2)">Siguiente paso</button>
+        </div>
+
+        <div class="step-page">
+            <button class="btn-back" onclick="nextStep(1)">← Volver</button>
+            <h2>Extras y Retiros</h2>
+            <div class="flex-row">
+                <label>Tonos extras ($5 c/u)</label>
+                <input type="number" class="calc-input" data-price="5" id="tonos" min="0" value="0">
+            </div>
+            <div class="flex-row">
+                <label>Cambio de forma ($20)</label>
+                <input type="checkbox" class="calc-check" data-price="20" id="forma">
+            </div>
+            <hr style="margin: 15px 0; opacity: 0.15;">
+            <div class="flex-row">
+                <label>Retiro Acrílico uña ($10)</label>
+                <input type="number" class="calc-input" data-price="10" id="ret_acr" min="0" value="0">
+            </div>
+            <div class="flex-row">
+                <label>Retiro Gel uña ($8)</label>
+                <input type="number" class="calc-input" data-price="8" id="ret_gel" min="0" value="0">
+            </div>
+            <div class="flex-row">
+                <label>Reposición Acrílico ($30)</label>
+                <input type="number" class="calc-input" data-price="30" id="rep_acr" min="0" value="0">
+            </div>
+            <button class="btn-nav" onclick="generateSummary()">Finalizar Cotización</button>
+        </div>
+
+        <div class="step-page">
+            <h2>Tu Resumen</h2>
+            <div id="summaryReceipt" class="receipt"></div>
+            <div class="total-box">
+                <span>TOTAL ESTIMADO</span>
+                <h3 id="finalTotal">$0.00</h3>
+            </div>
+            <button class="btn-nav" style="margin-top: 25px; background: #fff; color: var(--morado-royal); border: 2px solid var(--morado-royal);" onclick="reiniciarCotizacion()">
+                Nueva Cotización
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const wrapper = document.getElementById('stepsWrapper');
+    
+    // Función central de Swipe
+    function nextStep(stepIndex) {
+        wrapper.style.transform = `translateX(-${stepIndex * 25}%)`;
+        
+        // Actualizar los puntitos de progreso superiores
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === stepIndex);
+        });
+    }
+
+    // Validador visual interactivo para el paso 1
+    function validarPaso1() {
+        const tecnica = document.getElementById('tecnica').value;
+        const btn = document.getElementById('btnNext1');
+        if (tecnica !== "") {
+            btn.style.background = "var(--morado-royal)";
+            btn.style.color = "white";
+            btn.disabled = false;
+        } else {
+            btn.style.background = "#CED6E0";
+            btn.disabled = true;
+        }
+    }
+
+    // Acción explícita para ir al paso de decoraciones
+    function confirmarPaso1() {
+        nextStep(1);
+    }
+
+    // Generador dinámico del ticket desglosado
+    function generateSummary() {
+        const receipt = document.getElementById('summaryReceipt');
+        const tecnicaSelect = document.getElementById('tecnica');
+        const tecnicaNombre = tecnicaSelect.options[tecnicaSelect.selectedIndex].text;
+        const tecnicaPrecio = parseFloat(tecnicaSelect.value) || 0;
+
+        let total = tecnicaPrecio;
+        let html = `<div class="receipt-item"><strong>${tecnicaNombre.split('(')[0].trim()}</strong> <strong>$${tecnicaPrecio}</strong></div>`;
+
+        // Sumar todos los selectores numéricos de decoraciones/adicionales
+        document.querySelectorAll('.calc-input').forEach(input => {
+            const cant = parseInt(input.value) || 0;
+            const precio = parseFloat(input.dataset.price);
+            if (cant > 0) {
+                const sub = cant * precio;
+                total += sub;
+                const labelText = input.previousElementSibling.innerText.split('(')[0].trim();
+                html += `<div class="receipt-item"><span>${cant}x ${labelText}</span> <span>$${sub}</span></div>`;
+            }
+        });
+
+        // Sumar el checkbox (Cambio de forma)
+        const checkForma = document.getElementById('forma');
+        if (checkForma.checked) {
+            const p = parseFloat(checkForma.dataset.price);
+            total += p;
+            html += `<div class="receipt-item"><span>Cambio de forma</span> <span>$${p}</span></div>`;
+        }
+
+        receipt.innerHTML = html;
+        document.getElementById('finalTotal').innerText = `$${total.toFixed(2)}`;
+        nextStep(3); // Deslizar al paso del recibo final
+    }
+
+    // Reinicia la app limpiando el formulario de manera fluida
+    function reiniciarCotizacion() {
+        document.getElementById('tecnica').value = "";
+        document.querySelectorAll('.calc-input').forEach(input => input.value = 0);
+        document.getElementById('forma').checked = false;
+        validarPaso1();
+        nextStep(0);
+    }
+</script>
+
+</body>
+</html>
