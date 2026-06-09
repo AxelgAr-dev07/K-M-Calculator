@@ -371,80 +371,71 @@
 </div>
 
 <script>
-    const wrapper = document.getElementById('stepsWrapper');
-    
-    // Función central de Swipe
-    function nextStep(stepIndex) {
-        wrapper.style.transform = `translateX(-${stepIndex * 25}%)`;
-        
-        // Actualizar los puntitos de progreso superiores
-        document.querySelectorAll('.dot').forEach((dot, index) => {
-            dot.classList.toggle('active', index === stepIndex);
-        });
-    }
+const wrapper = document.getElementById('stepsWrapper');
 
-    // Validador visual interactivo para el paso 1
-    function validarPaso1() {
-        const tecnica = document.getElementById('tecnica').value;
-        const btn = document.getElementById('btnNext1');
-        if (tecnica !== "") {
-            btn.style.background = "var(--morado-royal)";
-            btn.style.color = "white";
-            btn.disabled = false;
-        } else {
-            btn.style.background = "#CED6E0";
-            btn.disabled = true;
+function nextStep(stepIndex) {
+    wrapper.style.transform = `translateX(-${stepIndex * 25}%)`;
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === stepIndex);
+    });
+}
+
+function validarPaso1() {
+    const tecnica = document.getElementById('tecnica').value;
+    const btn = document.getElementById('btnNext1');
+    if (tecnica !== "") {
+        btn.style.background = "var(--morado-royal)";
+        btn.style.color = "white";
+        btn.disabled = false;
+    } else {
+        btn.style.background = "#CED6E0";
+        btn.disabled = true;
+    }
+}
+
+function confirmarPaso1() {
+    nextStep(1);
+}
+
+function generateSummary() {
+    const receipt = document.getElementById('summaryReceipt');
+    const tecnicaSelect = document.getElementById('tecnica');
+    const tecnicaNombre = tecnicaSelect.options[tecnicaSelect.selectedIndex].text;
+    const tecnicaPrecio = parseFloat(tecnicaSelect.value) || 0;
+
+    let total = tecnicaPrecio;
+    let html = `<div class="receipt-item"><strong>${tecnicaNombre.split('(')[0].trim()}</strong> <strong>$${tecnicaPrecio}</strong></div>`;
+
+    document.querySelectorAll('.calc-input').forEach(input => {
+        const cant = parseInt(input.value) || 0;
+        const precio = parseFloat(input.dataset.price);
+        if (cant > 0) {
+            const sub = cant * precio;
+            total += sub;
+            const labelText = input.previousElementSibling.innerText.split('(')[0].trim();
+            html += `<div class="receipt-item"><span>${cant}x ${labelText}</span> <span>$${sub}</span></div>`;
         }
+    });
+
+    const checkForma = document.getElementById('forma');
+    if (checkForma.checked) {
+        const p = parseFloat(checkForma.dataset.price);
+        total += p;
+        html += `<div class="receipt-item"><span>Cambio de forma</span> <span>$${p}</span></div>`;
     }
 
-    // Acción explícita para ir al paso de decoraciones
-    function confirmarPaso1() {
-        nextStep(1);
-    }
+    receipt.innerHTML = html;
+    document.getElementById('finalTotal').innerText = `$${total.toFixed(2)}`;
+    nextStep(3);
+}
 
-    // Generador dinámico del ticket desglosado
-    function generateSummary() {
-        const receipt = document.getElementById('summaryReceipt');
-        const tecnicaSelect = document.getElementById('tecnica');
-        const tecnicaNombre = tecnicaSelect.options[tecnicaSelect.selectedIndex].text;
-        const tecnicaPrecio = parseFloat(tecnicaSelect.value) || 0;
-
-        let total = tecnicaPrecio;
-        let html = `<div class="receipt-item"><strong>${tecnicaNombre.split('(')[0].trim()}</strong> <strong>$${tecnicaPrecio}</strong></div>`;
-
-        // Sumar todos los selectores numéricos de decoraciones/adicionales
-        document.querySelectorAll('.calc-input').forEach(input => {
-            const cant = parseInt(input.value) || 0;
-            const precio = parseFloat(input.dataset.price);
-            if (cant > 0) {
-                const sub = cant * precio;
-                total += sub;
-                const labelText = input.previousElementSibling.innerText.split('(')[0].trim();
-                html += `<div class="receipt-item"><span>${cant}x ${labelText}</span> <span>$${sub}</span></div>`;
-            }
-        });
-
-        // Sumar el checkbox (Cambio de forma)
-        const checkForma = document.getElementById('forma');
-        if (checkForma.checked) {
-            const p = parseFloat(checkForma.dataset.price);
-            total += p;
-            html += `<div class="receipt-item"><span>Cambio de forma</span> <span>$${p}</span></div>`;
-        }
-
-        receipt.innerHTML = html;
-        document.getElementById('finalTotal').innerText = `$${total.toFixed(2)}`;
-        nextStep(3); // Deslizar al paso del recibo final
-    }
-
-    // Reinicia la app limpiando el formulario de manera fluida
-    function reiniciarCotizacion() {
-        document.getElementById('tecnica').value = "";
-        document.querySelectorAll('.calc-input').forEach(input => input.value = 0);
-        document.getElementById('forma').checked = false;
-        validarPaso1();
-        nextStep(0);
-    }
+function reiniciarCotizacion() {
+    document.getElementById('tecnica').value = "";
+    document.querySelectorAll('.calc-input').forEach(input => input.value = 0);
+    document.getElementById('forma').checked = false;
+    validarPaso1();
+    nextStep(0);
+}
 </script>
 
 </body>
