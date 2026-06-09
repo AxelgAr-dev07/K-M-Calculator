@@ -14,7 +14,6 @@
             --gris-ultra: #F8F9FA;
             --texto: #2D3436;
             --shadow: 0 20px 40px rgba(106, 27, 154, 0.08);
-            /* Contornos ultra suavizados globales */
             --radios-grandes: 32px;
             --radios-medianos: 18px;
         }
@@ -30,14 +29,16 @@
             align-items: center;
             min-height: 100vh;
             overflow-x: hidden;
+            padding: 20px;
         }
 
-        /* --- CONTENEDOR DE LA PÁGINA (Bordes muy suavizados) --- */
+        /* --- CONTENEDOR DE LA PÁGINA (Dinámico para evitar recortes) --- */
         .main-card {
             background: var(--blanco);
             width: 100%;
             max-width: 500px;
-            height: 760px;
+            min-height: 680px;
+            height: auto;
             border-radius: var(--radios-grandes);
             box-shadow: var(--shadow);
             position: relative;
@@ -59,7 +60,6 @@
             z-index: 10;
         }
 
-        /* Contenedor circular suave para asegurar la carga del logo por defecto */
         .logo-container {
             width: 100%;
             max-width: 220px;
@@ -67,6 +67,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 80px;
         }
 
         .logo {
@@ -98,7 +99,7 @@
             border-radius: 10px;
         }
 
-        /* --- CONTENEDOR DE PASOS (SWIPE WRAPPER) --- */
+        /* --- CONTENEDOR DE PASOS --- */
         .steps-container {
             display: flex;
             flex: 1;
@@ -109,9 +110,9 @@
         .step-page {
             width: 25%;
             padding: 0 32px 35px;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
         h2 {
@@ -122,7 +123,6 @@
             font-weight: 600;
         }
 
-        /* --- ELEMENTOS DE FORMULARIO (Contornos Redondeados) --- */
         .option-group { margin-bottom: 22px; }
         
         label {
@@ -139,7 +139,7 @@
             border: 1.5px solid #E4E7EB;
             border-radius: var(--radios-medianos);
             font-size: 14px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s ease;
             outline: none;
             background: #fff;
         }
@@ -147,7 +147,6 @@
         select:focus, input:focus, select:hover, input:hover {
             border-color: var(--morado-royal);
             background: var(--morado-luz);
-            transform: translateY(-2px);
         }
 
         /* --- BOTONES --- */
@@ -160,18 +159,19 @@
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: auto;
+            margin-top: 20px;
             transition: all 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
+            width: 100%;
         }
 
         .btn-nav:hover {
             background: var(--morado-deep);
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 12px 24px rgba(106, 27, 154, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(106, 27, 154, 0.15);
         }
 
         .btn-nav:disabled {
@@ -192,10 +192,6 @@
             font-weight: 600;
             text-align: left;
             width: fit-content;
-            transition: transform 0.2s ease;
-        }
-        .btn-back:hover {
-            transform: translateX(-3px);
         }
 
         /* --- RESUMEN FINAL --- */
@@ -221,16 +217,10 @@
             background: var(--morado-royal);
             color: white;
             border-radius: var(--radios-medianos);
-            margin-top: 10px;
-            transition: transform 0.3s ease;
-        }
-        .total-box:hover {
-            transform: scale(1.02);
         }
 
         .total-box h3 { font-size: 34px; margin-top: 5px; font-weight: 700; }
 
-        /* Estilo para filas de diseño */
         .flex-row {
             display: flex;
             align-items: center;
@@ -244,9 +234,7 @@
             height: 22px; 
             accent-color: var(--morado-royal);
             cursor: pointer;
-            border-radius: 6px;
         }
-
     </style>
 </head>
 <body>
@@ -267,27 +255,29 @@
     <div class="steps-container" id="stepsWrapper">
         
         <div class="step-page">
-            <h2>Técnica Base</h2>
-            <div class="option-group">
-                <label>Selecciona el servicio principal:</label>
-                <select id="tecnica" onchange="validarPaso1()">
-                    <option value="">-- Elige una técnica --</option>
-                    <optgroup label="Polygel">
-                        <option value="300">Polygel Largo 1 ($300)</option>
-                        <option value="350">Polygel Largo 2 ($350)</option>
-                        <option value="380">Polygel Largo 3 ($380)</option>
-                        <option value="400">Polygel Largo 4 ($400)</option>
-                        <option value="450">Polygel Largo 5 ($450)</option>
-                    </optgroup>
-                    <option value="150">Gel Semipermanente Manos ($150)</option>
-                    <option value="300">Rubber Gel ($300)</option>
-                    <option value="190">Press On ($190)</option>
-                </select>
+            <div>
+                <h2>Técnica Base</h2>
+                <div class="option-group">
+                    <label>Selecciona el servicio principal:</label>
+                    <select id="tecnica" onchange="validarPaso1()">
+                        <option value="">-- Elige una técnica --</option>
+                        <optgroup label="Polygel">
+                            <option value="300">Polygel Largo 1 ($300)</option>
+                            <option value="350">Polygel Largo 2 ($350)</option>
+                            <option value="380">Polygel Largo 3 ($380)</option>
+                            <option value="400">Polygel Largo 4 ($400)</option>
+                            <option value="450">Polygel Largo 5 ($450)</option>
+                        </optgroup>
+                        <option value="150">Gel Semipermanente Manos ($150)</option>
+                        <option value="300">Rubber Gel ($300)</option>
+                        <option value="190">Press On ($190)</option>
+                    </select>
+                </div>
+                <p style="font-size: 11px; color: #95A5A6; text-align: center; margin-bottom: 8px;">Incluye 2 tonos lisos a elegir.</p>
+                <p style="font-size: 11px; color: var(--morado-royal); font-weight: 600; font-style: italic; text-align: center; margin-bottom: 15px;">Calculadora hecha para mi bella guapolita por su bello guapolito</p>
             </div>
-            <p style="font-size: 11px; color: #95A5A6; text-align: center; margin-bottom: 20px;">Incluye 2 tonos lisos a elegir.</p>
-            <p style="font-size: 11px; color: var(--morado-royal); font-weight: 600; font-style: italic; text-align: center; margin-top: 0; margin-bottom: 25px;">Calculadora hecha para mi bella guapolita por su bello guapolito</p>
             
-            <button class="btn-nav" onclick="confirmarPaso1()" id="btnNext1" disabled style="background: #CED6E0;">
+            <button class="btn-nav" onclick="confirmarPaso1()" id="btnNext1" disabled>
                 Confirmar Técnica Base
             </button>
         </div>
@@ -295,17 +285,17 @@
         <div class="step-page">
             <button class="btn-back" onclick="nextStep(0)">← Volver</button>
             <h2>Decoraciones Extra</h2>
-            <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px;">
+            <div style="flex: 1; margin-bottom: 15px;">
                 <div class="flex-row">
-                    <label>Arte Simple / Francés / Ojo Gato ($5)</label>
+                    <label>Arte Simple / Francés ($5)</label>
                     <input type="number" class="calc-input" data-price="5" id="dec_simple" min="0" value="0">
                 </div>
                 <div class="flex-row">
-                    <label>3D / Encapsulado / Naturaleza ($10)</label>
+                    <label>3D / Encapsulado ($10)</label>
                     <input type="number" class="calc-input" data-price="10" id="dec_med" min="0" value="0">
                 </div>
                 <div class="flex-row">
-                    <label>Relieve / Baby Boomer / Flor 3D ($15)</label>
+                    <label>Relieve / Baby Boomer ($15)</label>
                     <input type="number" class="calc-input" data-price="15" id="dec_high" min="0" value="0">
                 </div>
                 <div class="flex-row">
@@ -316,14 +306,6 @@
                     <label>Cristales M ($30)</label>
                     <input type="number" class="calc-input" data-price="30" id="crist_m" min="0" value="0">
                 </div>
-                <div class="flex-row">
-                    <label>Uña Completa Cristales CH ($50)</label>
-                    <input type="number" class="calc-input" data-price="50" id="full_crist" min="0" value="0">
-                </div>
-                <div class="flex-row">
-                    <label>Piedra pequeña ($2)</label>
-                    <input type="number" class="calc-input" data-price="2" id="piedra" min="0" value="0">
-                </div>
             </div>
             <button class="btn-nav" onclick="nextStep(2)">Siguiente paso</button>
         </div>
@@ -331,26 +313,24 @@
         <div class="step-page">
             <button class="btn-back" onclick="nextStep(1)">← Volver</button>
             <h2>Extras y Retiros</h2>
-            <div class="flex-row">
-                <label>Tonos extras ($5 c/u)</label>
-                <input type="number" class="calc-input" data-price="5" id="tonos" min="0" value="0">
-            </div>
-            <div class="flex-row">
-                <label>Cambio de forma ($20)</label>
-                <input type="checkbox" class="calc-check" data-price="20" id="forma">
-            </div>
-            <hr style="margin: 15px 0; opacity: 0.15;">
-            <div class="flex-row">
-                <label>Retiro Acrílico uña ($10)</label>
-                <input type="number" class="calc-input" data-price="10" id="ret_acr" min="0" value="0">
-            </div>
-            <div class="flex-row">
-                <label>Retiro Gel uña ($8)</label>
-                <input type="number" class="calc-input" data-price="8" id="ret_gel" min="0" value="0">
-            </div>
-            <div class="flex-row">
-                <label>Reposición Acrílico ($30)</label>
-                <input type="number" class="calc-input" data-price="30" id="rep_acr" min="0" value="0">
+            <div>
+                <div class="flex-row">
+                    <label>Tonos extras ($5 c/u)</label>
+                    <input type="number" class="calc-input" data-price="5" id="tonos" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>Cambio de forma ($20)</label>
+                    <input type="checkbox" class="calc-check" data-price="20" id="forma">
+                </div>
+                <hr style="margin: 15px 0; opacity: 0.15;">
+                <div class="flex-row">
+                    <label>Retiro Acrílico uña ($10)</label>
+                    <input type="number" class="calc-input" data-price="10" id="ret_acr" min="0" value="0">
+                </div>
+                <div class="flex-row">
+                    <label>Retiro Gel uña ($8)</label>
+                    <input type="number" class="calc-input" data-price="8" id="ret_gel" min="0" value="0">
+                </div>
             </div>
             <button class="btn-nav" onclick="generateSummary()">Finalizar Cotización</button>
         </div>
@@ -362,7 +342,7 @@
                 <span>TOTAL ESTIMADO</span>
                 <h3 id="finalTotal">$0.00</h3>
             </div>
-            <button class="btn-nav" style="margin-top: 25px; background: #fff; color: var(--morado-royal); border: 2px solid var(--morado-royal);" onclick="reiniciarCotizacion()">
+            <button class="btn-nav" style="background: #fff; color: var(--morado-royal); border: 2px solid var(--morado-royal);" onclick="reiniciarCotizacion()">
                 Nueva Cotización
             </button>
         </div>
